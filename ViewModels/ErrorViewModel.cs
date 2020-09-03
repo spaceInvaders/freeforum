@@ -1,6 +1,4 @@
-using System;
-
-namespace FreeForum.Models
+namespace FreeForum.ViewModels
 {
     public class ErrorViewModel
     {

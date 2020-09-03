@@ -1,4 +1,5 @@
-using FreeForum.Models;
+using FreeForum.Data;
+using FreeForum.Data.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
