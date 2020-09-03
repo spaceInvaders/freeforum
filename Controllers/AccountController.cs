@@ -29,11 +29,11 @@ namespace FreeForum.Controllers
             if (ModelState.IsValid)
             {
                 User user = new User { Email = model.Email, UserName = model.Email };
-                // добавляем пользователя
+                // Add user
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    // генерация токена для пользователя
+                    // Generating a token for a user
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action(
                         "ConfirmEmail",
@@ -42,9 +42,9 @@ namespace FreeForum.Controllers
                         protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
                     await emailService.SendEmailAsync(model.Email, "Confirm your account",
-                        $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+                        $"Confirm registration: <a href='{callbackUrl}'>link</a>");
 
-                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+                    return Content("To complete the registration, check your email and follow the link in the letter");
                 }
                 else
                 {
@@ -92,10 +92,10 @@ namespace FreeForum.Controllers
                 var user = await _userManager.FindByNameAsync(model.Email);
                 if (user != null)
                 {
-                    // проверяем, подтвержден ли email
+                    // check if email is confirmed
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                        ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                        ModelState.AddModelError(string.Empty, "You have not confirmed your email");
                         return View(model);
                     }
                 }
@@ -107,7 +107,7 @@ namespace FreeForum.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    ModelState.AddModelError("", "Incorrect login and (or) password");
                 }
             }
             return View(model);
@@ -117,7 +117,7 @@ namespace FreeForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
-            // удаляем аутентификационные куки
+            // delete authentication cookies
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
