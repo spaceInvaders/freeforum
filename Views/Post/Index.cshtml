@@ -1,0 +1,21 @@
+﻿@model FreeForum.ViewModels.Post.PostIndexModel
+
+<h1>posts</h1>
+
+<table class="table-hover" id="postIndexTable">
+    <tbody>
+        @foreach (var post in Model.PostList)
+        {
+            <tr>
+                <td>
+                    @post.Name
+                </td>
+                <td>
+                    @post.Description
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

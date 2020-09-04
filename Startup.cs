@@ -21,10 +21,10 @@ namespace FreeForum
         {
             string conStr = "Server=(localdb)\\mssqllocaldb;Database=freeforum;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(conStr));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(conStr));
 
             services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
