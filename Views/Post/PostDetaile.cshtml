@@ -1,6 +1,6 @@
 ﻿@model FreeForum.ViewModels.Post.PostDetaileModel
 
-<h3>@Model.Title</h3>
+<h1 class="display-4">Welcome to @Model.Title discussion!</h1>
 <div>
     Author: @Model.AuthorName
     Created: @Model.Created
@@ -22,4 +22,8 @@
             </div>
         </div>
     }
+}
+else
+{
+    <p>We have no replies yet.. Want to add one?</p>
 }

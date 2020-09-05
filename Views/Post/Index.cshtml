@@ -1,7 +1,14 @@
 ﻿@model FreeForum.ViewModels.Post.PostIndexModel
 
-<h4>Welcome to FreeForum!</h4>
-<h4>You can create a new post or reply on existing one in case you are authorized</h4>
+<h1 class="display-4">Welcome to FreeForum!</h1>
+<p>You can create a new post or reply on existing one in case you are authorized</p>
+<span id="headingBtn">
+    <a asp-controller="Post"
+       asp-action="Create"
+       class="btn btn-newPost">
+        Create Post
+    </a>
+</span>
     @if (Model.PostList.Any())
     {
         <table class="table table-bordered table-hover" id="postIndexTable">
@@ -15,7 +22,7 @@
                             </a>
                         </td>
                         <td>
-                            @post.Description
+                            @post.Content
                         </td>
                         <td>
                             @post.UserName

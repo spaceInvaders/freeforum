@@ -2,18 +2,24 @@
 using FreeForum.Data.Models;
 using FreeForum.ViewModels.Post;
 using FreeForum.ViewModels.Reply;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FreeForum.Controllers
 {
     public class PostController : Controller
     {
         private IPost PostService { get; }
-        public PostController(IPost postService)
+        private static UserManager<User> UserManager { get; set; }
+
+        public PostController(IPost postService, UserManager<User> userManager)
         {
             PostService = postService;
+            UserManager = userManager;
         }
 
         public IActionResult Index()
@@ -25,7 +31,7 @@ namespace FreeForum.Controllers
                     Title = post.Title,
                     UserName = post.User.UserName,
                     DateCreated = post.Created.ToString(),
-                    Description = post.Description,
+                    Content = post.Content,
                     RepliesCount = post.Replies.Count()
                 });
 
@@ -54,6 +60,39 @@ namespace FreeForum.Controllers
             };
 
             return View(model);
+        }
+
+        public IActionResult Create()
+        {
+            var model = new NewPostModel
+            {
+                AuthorName = User.Identity.Name
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPost(NewPostModel model)
+        {
+            var userId = UserManager.GetUserId(User);
+            var user = UserManager.FindByIdAsync(userId).Result;
+            var post = BuildPost(model, user);
+
+            await PostService.Add(post);
+
+            return RedirectToAction("PostDetaile", "Post", new { post.Id });
+        }
+
+        private Post BuildPost(NewPostModel model, User user)
+        {
+            return new Post
+            {
+                Title = model.Title,
+                Content = model.Content,
+                Created = DateTime.Now,
+                User = user
+            };
         }
 
         private IEnumerable<PostReplyModel> BuildPostReplies(IEnumerable<PostReply> replies)
