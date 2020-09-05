@@ -1,21 +1,44 @@
 ﻿@model FreeForum.ViewModels.Post.PostIndexModel
 
-<h1>posts</h1>
+<h4>Welcome to FreeForum!</h4>
+<h4>You can create a new post or reply on existing one in case you are authorized</h4>
+    @if (Model.PostList.Any())
+    {
+        <table class="table table-bordered table-hover" id="postIndexTable">
+            <tbody>
+                @foreach (var post in Model.PostList)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Post" asp-action="PostDetaile" asp-route-id="@post.Id">
+                                @post.Title
+                            </a>
+                        </td>
+                        <td>
+                            @post.Description
+                        </td>
+                        <td>
+                            @post.UserName
+                        </td>
+                        <td>
+                            @post.DateCreated
+                        </td>
+                        <td>
+                            @post.RepliesCount
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="">
+            <h3>
+                We have no posts yet..
+            </h3>
+        </div>
+    }
 
-<table class="table-hover" id="postIndexTable">
-    <tbody>
-        @foreach (var post in Model.PostList)
-        {
-            <tr>
-                <td>
-                    @post.Name
-                </td>
-                <td>
-                    @post.Description
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
 

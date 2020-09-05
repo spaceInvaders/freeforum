@@ -1,5 +1,6 @@
 using FreeForum.Data;
 using FreeForum.Data.Models;
+using FreeForum.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace FreeForum
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IPost, PostService>();
 
             services.AddControllersWithViews();
         }

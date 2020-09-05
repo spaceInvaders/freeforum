@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FreeForum.Data\FreeForum.Data.csproj" />
+    <ProjectReference Include="..\FreeForum.Service\FreeForum.Service.csproj" />
   </ItemGroup>
 
 </Project>
