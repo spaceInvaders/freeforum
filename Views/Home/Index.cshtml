@@ -2,7 +2,74 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@model FreeForum.ViewModels.Post.PostIndexModel
+
+<div class="container">
+    <h1 class="display-4">Welcome to FreeForum!</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <span id="headingBtn">
+            <a asp-controller="Post"
+               asp-action="Create"
+               class="btn btn-newPost">
+                Create Post
+            </a>
+        </span>
+    }
+    else
+    {
+        <p>
+            <a asp-controller="Account" asp-action="Login">
+                You can create a new post in case you are authenticated
+            </a>
+        </p>
+    }
+    @if (Model.PostList.Any())
+    {
+        <table class="table table-bordered table-hover" id="postIndexTable">
+            <tbody>
+                @foreach (var post in Model.PostList)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Post" asp-action="PostDetaile" asp-route-id="@post.Id">
+                                @post.Title
+                            </a>
+                        </td>
+                        <td>
+                            @post.Content
+                        </td>
+                        <td>
+                            @post.UserName
+                        </td>
+                        <td>
+                            @post.DateCreated
+                        </td>
+                        <td>
+                            @if (post.RepliesCount == 1)
+                            {
+                                <span>@post.RepliesCount Reply</span>
+                            }
+                            @if (post.RepliesCount == 0)
+                            {
+                                <span>No Replies</span>
+                            }
+                            else
+                            {
+                                <span>@post.RepliesCount Replies</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>We have no posts yet...</p>
+    }
 </div>
+
+
+
+
