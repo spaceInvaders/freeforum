@@ -1,8 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
-@model FreeForum.ViewModels.RegisterViewModel
+﻿@model FreeForum.ViewModels.RegisterViewModel
 <h2>Registration</h2>
 <form method="post" asp-controller="Account" asp-action="Register">
     <div asp-validation-summary="ModelOnly"></div>
@@ -22,6 +18,6 @@
         <span asp-validation-for="PasswordConfirm"></span>
     </div>
     <div>
-        <input type="submit" value="Register" />
+        <input class="btn btn-warning" type="submit" value="Register" />
     </div>
 </form>

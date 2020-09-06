@@ -1,0 +1,21 @@
+﻿@model FreeForum.ViewModels.Reply.PostReplyModel
+
+<div class="container">
+    <p>
+        <a asp-controller="Post"
+           asp-action="PostDetaile"
+           asp-route-id="@Model.PostId"
+           class="btn btn-outline-dark">
+            Return to '@Model.PostTitle' discussion
+        </a>
+    </p>
+    <h3>Reply on '@Model.PostTitle'</h3>
+    <p>@Model.PostContent</p>
+    <form asp-action="AddReply" method="post">
+        <textarea asp-for="ReplyContent" rows="6" class="form-control"></textarea>
+        <span asp-validation-for="ReplyContent"></span>
+        <button type="submit" class="btn btn-warning">Submit Reply</button>
+        <input asp-for="AuthorId" type="hidden"/>
+        <input asp-for="PostId" type="hidden"/>
+    </form>
+</div>

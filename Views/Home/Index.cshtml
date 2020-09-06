@@ -8,18 +8,18 @@
     <h1 class="display-4">Welcome to FreeForum!</h1>
     @if (User.Identity.IsAuthenticated)
     {
-        <span id="headingBtn">
+        <p id="">
             <a asp-controller="Post"
                asp-action="Create"
-               class="btn btn-newPost">
+               class="btn btn-warning">
                 Create Post
             </a>
-        </span>
+        </p>
     }
     else
     {
         <p>
-            <a asp-controller="Account" asp-action="Login">
+            <a style="text-decoration: none;" asp-controller="Account" asp-action="Login" class="btn btn-warning">
                 You can create a new post in case you are authenticated
             </a>
         </p>
@@ -32,7 +32,7 @@
                 {
                     <tr>
                         <td>
-                            <a asp-controller="Post" asp-action="PostDetaile" asp-route-id="@post.Id">
+                            <a style="text-decoration: none;" asp-controller="Post" asp-action="PostDetaile" asp-route-id="@post.Id">
                                 @post.Title
                             </a>
                         </td>
@@ -43,14 +43,14 @@
                             @post.UserName
                         </td>
                         <td>
-                            @post.DateCreated
+                            <p class="font-weight-light">@post.DateCreated</p>
                         </td>
                         <td>
                             @if (post.RepliesCount == 1)
                             {
                                 <span>@post.RepliesCount Reply</span>
                             }
-                            @if (post.RepliesCount == 0)
+                            else if (post.RepliesCount == 0)
                             {
                                 <span>No Replies</span>
                             }

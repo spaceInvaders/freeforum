@@ -3,30 +3,47 @@
 <div class="container">
     <h1 class="display-4">Welcome to '@Model.Title' discussion!</h1>
     <div>
-        Author: @Model.AuthorName
-        Created: @Model.Created
+        <p class="font-weight-bold">@Model.PostContent</p>
     </div>
     <div>
-        @Model.PostContent
+        <p class="font-weight-light font-italic">Author: @Model.AuthorName, Created: @Model.Created</p>
     </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p id="">
+            <a asp-controller="Reply"
+               asp-action="Create"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                Reply on a post
+            </a>
+        </p>
+    }
+    else
+    {
+        <p>
+            <a style="text-decoration: none;" asp-controller="Account" asp-action="Login" class="btn btn-warning">
+                You can comment this post in case you are authenticated
+            </a>
+        </p>
+    }
     @if (Model.Replies.Any())
     {
         foreach (var reply in Model.Replies)
         {
             <div>
                 <div>
-                    Reply Author: @reply.AuthorName
-                    Reply Created: @reply.Created
+                    @reply.ReplyContent
                 </div>
                 <div>
-                    Reply: @reply.ReplyContent
+                    <p class="font-weight-light font-italic">Author: @reply.AuthorName, Created: @reply.Created</p>
                 </div>
             </div>
         }
     }
     else
     {
-        <p>We have no replies yet.. Want to add one?</p>
+        <p>This post doesn't have any replies yet.. Want to add one?</p>
     }
 </div>
 
