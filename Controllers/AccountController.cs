@@ -4,7 +4,7 @@ using FreeForum.ViewModels;
 using FreeForum.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-using FreeForum.Services;
+using FreeForum.Service;
 
 namespace FreeForum.Controllers
 {
@@ -12,11 +12,14 @@ namespace FreeForum.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
         [HttpGet]
         public IActionResult Register()
@@ -40,8 +43,7 @@ namespace FreeForum.Controllers
                         "Account",
                         new { userId = user.Id, code = code },
                         protocol: HttpContext.Request.Scheme);
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Confirm your account",
+                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                         $"Confirm registration: <a href='{callbackUrl}'>link</a>");
 
                     return Content("To complete the registration, check your email and follow the link in the letter");

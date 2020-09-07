@@ -11,14 +11,14 @@ namespace FreeForum.Controllers
 {
     public class ReplyController : Controller
     {
-        private readonly IPost _postService;
         private readonly IReply _replyService;
+        private readonly IPost _postService;
         private readonly UserManager<User> _userManager;
 
-        public ReplyController(IPost postService, IReply replyService, UserManager<User> userManager)
+        public ReplyController(IReply replyService, IPost postService, UserManager<User> userManager)
         {
-            _postService = postService;
             _replyService = replyService;
+            _postService = postService;
             _userManager = userManager;
         }
 
@@ -32,7 +32,7 @@ namespace FreeForum.Controllers
                 ReplyId = id,
                 AuthorId = userId,
                 ContentToEdit = reply.Content,
-                PostId = reply.PostId,
+                PostId = reply.Post.Id.ToString(),
                 PostTitle = reply.Post.Title,
                 PostContent = reply.Post.Content
             };
@@ -48,7 +48,7 @@ namespace FreeForum.Controllers
             return RedirectToAction("PostDetaile", "Post", new { id = Int32.Parse(model.PostId) });
         }
 
-        public async Task<IActionResult> Create(int id)
+        public async Task<IActionResult> DisplayFormToCreateReply(int id)
         {
             var post = _postService.GetById(id: id);
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -60,7 +60,7 @@ namespace FreeForum.Controllers
 
                 Created = DateTime.Now,
 
-                PostId = post.Id.ToString(),
+                PostId = post.Id,
                 PostTitle = post.Title,
                 PostContent = post.Content 
             };
@@ -74,14 +74,14 @@ namespace FreeForum.Controllers
             var user = _userManager.FindByIdAsync(model.AuthorId).Result;
             var reply = BuildReply(model, user);
 
-            await _postService.AddReply(reply);
+            await _replyService.AddReply(reply);
 
-            return RedirectToAction("PostDetaile", "Post", new { id = Int32.Parse(model.PostId) });
+            return RedirectToAction("PostDetaile", "Post", new { id = model.PostId });
         }
 
         private PostReply BuildReply(PostReplyModel model, User user)
         {
-            var post = _postService.GetById(Int32.Parse(model.PostId));
+            var post = _postService.GetById(model.PostId);
 
             return new PostReply
             {
@@ -91,8 +91,7 @@ namespace FreeForum.Controllers
                 UserId = model.AuthorId,
                 User = user,
 
-                Post = post,
-                PostId = post.Id.ToString()
+                Post = post
             };
         }
     }

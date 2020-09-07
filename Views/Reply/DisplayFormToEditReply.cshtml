@@ -15,6 +15,7 @@
     <form asp-action="AddEditedReply" method="post">
         <textarea asp-for="EditedContent" rows="6" class="form-control" placeholder="New reply"></textarea>
         <span asp-validation-for="EditedContent"></span>
+        <br>
         <button type="submit" class="btn btn-warning">Edit Reply</button>
         <input asp-for="ReplyId" type="hidden" />
         <input asp-for="PostId" type="hidden" />

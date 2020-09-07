@@ -32,6 +32,8 @@ namespace FreeForum
 
             services.AddScoped<IReply, ReplyService>();
 
+            services.AddTransient<IEmailSender, EmailService>();
+
             services.AddControllersWithViews();
         }
 

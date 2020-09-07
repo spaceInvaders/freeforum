@@ -66,7 +66,7 @@ namespace FreeForum.Controllers
             return View(model);
         }
 
-        public IActionResult Create()
+        public IActionResult DisplayFormToCreatePost()
         {
             var model = new NewPostModel
             {
@@ -108,7 +108,7 @@ namespace FreeForum.Controllers
                 AuthorId = reply.UserId,
                 Created = reply.Created,
                 ReplyContent = reply.Content,
-                PostId = reply.PostId
+                PostId = reply.Post.Id
             });
 
             var sortedByNewpostRepliesModels = postRepliesModels.OrderByDescending(reply => reply.Created);
