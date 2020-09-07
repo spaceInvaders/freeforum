@@ -7,24 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FreeForum.Controllers
 {
     public class PostController : Controller
     {
-        private IPost PostService { get; }
-        private static UserManager<User> UserManager { get; set; }
+        private readonly IPost _postService;
+        private readonly UserManager<User> _userManager;
 
         public PostController(IPost postService, UserManager<User> userManager)
         {
-            PostService = postService;
-            UserManager = userManager;
+            _postService = postService;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<PostListingModel> posts = PostService.GetAll()
+            IEnumerable<PostListingModel> posts = _postService.GetAll()
                 .Select(post => new PostListingModel
                 { 
                     Id = post.Id,
@@ -44,7 +45,9 @@ namespace FreeForum.Controllers
         }
         public IActionResult PostDetaile(int id)
         {
-            var post = PostService.GetById(id: id);
+            var post = _postService.GetById(id: id);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var replies = BuildPostReplies(replies: post.Replies);
 
@@ -56,7 +59,8 @@ namespace FreeForum.Controllers
                 AuthorName = post.User.UserName,
                 Created = post.Created,
                 PostContent = post.Content,
-                Replies = replies
+                Replies = replies,
+                CurrentLoggedInUserId = userId
             };
 
             return View(model);
@@ -75,11 +79,11 @@ namespace FreeForum.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost(NewPostModel model)
         {
-            var userId = UserManager.GetUserId(User);
-            var user = UserManager.FindByIdAsync(userId).Result;
+            var userId = _userManager.GetUserId(User);
+            var user = _userManager.FindByIdAsync(userId).Result;
             var post = BuildPost(model, user);
 
-            await PostService.Add(post);
+            await _postService.Add(post);
 
             return RedirectToAction("PostDetaile", "Post", new { post.Id });
         }
@@ -97,7 +101,7 @@ namespace FreeForum.Controllers
 
         private IEnumerable<PostReplyModel> BuildPostReplies(IEnumerable<PostReply> replies)
         {
-            return replies.Select(reply => new PostReplyModel
+            var postRepliesModels = replies.Select(reply => new PostReplyModel
             {
                 Id = reply.Id,
                 AuthorName = reply.User.UserName,
@@ -106,6 +110,10 @@ namespace FreeForum.Controllers
                 ReplyContent = reply.Content,
                 PostId = reply.PostId
             });
+
+            var sortedByNewpostRepliesModels = postRepliesModels.OrderByDescending(reply => reply.Created);
+
+            return sortedByNewpostRepliesModels;
         }
     }
 }

@@ -14,5 +14,7 @@ namespace FreeForum.ViewModels.Post
         public string PostContent { get; set; }
 
         public IEnumerable<PostReplyModel> Replies { get; set; }
+
+        public string CurrentLoggedInUserId { get; set; }
     }
 }

@@ -30,6 +30,8 @@ namespace FreeForum
 
             services.AddScoped<IPost, PostService>();
 
+            services.AddScoped<IReply, ReplyService>();
+
             services.AddControllersWithViews();
         }
 

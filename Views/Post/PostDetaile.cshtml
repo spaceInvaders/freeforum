@@ -3,10 +3,10 @@
 <div class="container">
     <h1 class="display-4">Welcome to '@Model.Title' discussion!</h1>
     <div>
-        <p class="font-weight-bold">@Model.PostContent</p>
+        <p><mark>✏ @Model.PostContent</mark></p>
     </div>
     <div>
-        <p class="font-weight-light font-italic">Author: @Model.AuthorName, Created: @Model.Created</p>
+        <p class="font-weight-light">🤩 @Model.AuthorName ⌚ @Model.Created</p>
     </div>
     @if (User.Identity.IsAuthenticated)
     {
@@ -31,14 +31,42 @@
     {
         foreach (var reply in Model.Replies)
         {
-            <div>
-                <div>
-                    @reply.ReplyContent
-                </div>
-                <div>
-                    <p class="font-weight-light font-italic">Author: @reply.AuthorName, Created: @reply.Created</p>
-                </div>
-            </div>
+            <table class="table table-hover col-sm-12">
+                <tbody>
+                    <tr>
+                        <td class="col-sm-8">
+                            <div>
+                                @reply.ReplyContent
+                            </div>
+                        </td>
+                        <td class="col-sm-2">
+                            <p class="font-weight-light font-italic"><small>@reply.AuthorName @reply.Created</small></p>
+                        </td>
+                        <td class="col-sm-2">
+                            @if (User.Identity.IsAuthenticated && reply.AuthorId == Model.CurrentLoggedInUserId)
+                            {
+                                <p id="">
+                                    <a asp-controller="Reply"
+                                       asp-action="DisplayFormToEditReply"
+                                       asp-route-id="@reply.Id"
+                                       class="btn btn-warning">
+                                        Edit
+                                    </a>
+                                </p>
+                            }
+                            else if(User.Identity.IsAuthenticated && reply.AuthorId != Model.CurrentLoggedInUserId)
+                            {
+                                <p id="">
+                                    <a 
+                                       class="btn btn-success">
+                                        Like
+                                    </a>
+                                </p>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         }
     }
     else

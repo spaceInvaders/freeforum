@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FreeForum.Data;
 using FreeForum.Data.Models;
@@ -11,13 +12,42 @@ namespace FreeForum.Controllers
     public class ReplyController : Controller
     {
         private readonly IPost _postService;
+        private readonly IReply _replyService;
         private readonly UserManager<User> _userManager;
 
-        public ReplyController(IPost postService, UserManager<User> userManager)
+        public ReplyController(IPost postService, IReply replyService, UserManager<User> userManager)
         {
             _postService = postService;
+            _replyService = replyService;
             _userManager = userManager;
         }
+
+        public IActionResult DisplayFormToEditReply(int id)
+        {
+            var reply = _replyService.GetById(id: id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var model = new ReplyEditModel
+            {
+                ReplyId = id,
+                AuthorId = userId,
+                ContentToEdit = reply.Content,
+                PostId = reply.PostId,
+                PostTitle = reply.Post.Title,
+                PostContent = reply.Post.Content
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEditedReply(ReplyEditModel model)
+        {
+            await _replyService.UpdateReply(id: model.ReplyId, editedContent: model.EditedContent);
+
+            return RedirectToAction("PostDetaile", "Post", new { id = Int32.Parse(model.PostId) });
+        }
+
         public async Task<IActionResult> Create(int id)
         {
             var post = _postService.GetById(id: id);
