@@ -5,64 +5,57 @@
 @model FreeForum.ViewModels.Post.PostIndexModel
 
 <div class="container">
-    <h1 class="display-4">Welcome to FreeForum!</h1>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <p id="">
-            <a asp-controller="Post"
-               asp-action="DisplayFormToCreatePost"
-               class="btn btn-warning">
-                ✏ Create Post
-            </a>
-        </p>
-    }
-    else
-    {
-        <p>
-            <a style="text-decoration: none;" asp-controller="Account" asp-action="Login" class="btn btn-warning">
-                ✏ You can create a new post in case you are authenticated
-            </a>
-        </p>
-    }
+     <div class="row">
+         <h1 class="display-4">Welcome to FreeForum!</h1>
+     </div>
+     <div class="row">
+         @if (User.Identity.IsAuthenticated)
+         {
+             <p>
+                 <a asp-controller="Post"
+                    asp-action="DisplayFormToCreatePost"
+                    class="btn btn-danger">
+                    ✏ Create Post
+                 </a>
+             </p>
+         }
+         else
+         {
+             <p>
+                 <a style="text-decoration: none;"
+                    asp-controller="Account"
+                    asp-action="Login"
+                    class="btn">
+                    ✏ To create a new post you have to be logged in
+                 </a>
+             </p>
+         }
+     </div>
     @if (Model.PostList.Any())
     {
-        <table class="table table-bordered table-hover" id="postIndexTable">
-            <tbody>
-                @foreach (var post in Model.PostList)
-                {
-                    <tr>
-                        <td>
-                            <a style="text-decoration: none;" asp-controller="Post" asp-action="PostDetaile" asp-route-id="@post.Id">
-                                @post.Title
-                            </a>
-                        </td>
-                        <td>
-                            @post.Content
-                        </td>
-                        <td>
-                            @post.UserName
-                        </td>
-                        <td>
-                            <p class="font-weight-light">@post.DateCreated</p>
-                        </td>
-                        <td>
-                            @if (post.RepliesCount == 1)
-                            {
-                                <span>@post.RepliesCount Reply</span>
-                            }
-                            else if (post.RepliesCount == 0)
-                            {
-                                <span>No Replies</span>
-                            }
-                            else
-                            {
-                                <span>@post.RepliesCount Replies</span>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @foreach (var post in Model.PostList)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <a style="text-decoration: none;"
+                           asp-controller="Post"
+                           asp-action="PostDetaile"
+                           asp-route-id="@post.Id"
+                           class="btn btn-block btn-warning">
+                            @post.Title
+                        </a>
+                    </div>
+                    <div class="row">
+                        <span>@post.Content</span>
+                    </div>
+                    <div class="row d-flex justify-content-between">
+                        <p class="font-weight-light"><small>🤩 @post.UserName ⌚ @post.DateCreated</small></p>
+                        <p>@post.RepliesCount 💬</p>
+                    </div>
+                </div>
+            </div><br>
+        }
     }
     else
     {

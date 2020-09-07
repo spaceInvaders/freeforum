@@ -24,20 +24,27 @@ namespace FreeForum.Controllers
 
         public IActionResult DisplayFormToEditReply(int id)
         {
-            var reply = _replyService.GetById(id: id);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var model = new ReplyEditModel
+            if (id > 0)
             {
-                ReplyId = id,
-                AuthorId = userId,
-                ContentToEdit = reply.Content,
-                PostId = reply.Post.Id.ToString(),
-                PostTitle = reply.Post.Title,
-                PostContent = reply.Post.Content
-            };
+                var reply = _replyService.GetById(id: id);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View(model);
+                var model = new ReplyEditModel
+                {
+                    ReplyId = id,
+                    AuthorId = userId,
+                    ContentToEdit = reply.Content,
+                    PostId = reply.Post.Id.ToString(),
+                    PostTitle = reply.Post.Title,
+                    PostContent = reply.Post.Content
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]

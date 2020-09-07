@@ -25,45 +25,37 @@ namespace FreeForum.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<PostListingModel> posts = _postService.GetAll()
-                .Select(post => new PostListingModel
-                { 
-                    Id = post.Id,
-                    Title = post.Title,
-                    UserName = post.User.UserName,
-                    DateCreated = post.Created.ToString(),
-                    Content = post.Content,
-                    RepliesCount = post.Replies.Count()
-                });
-
-            var model = new PostIndexModel
-            {
-                PostList = posts
-            };
-
-            return View(model);
+            return RedirectToAction("Index", "Home");
         }
+
         public IActionResult PostDetaile(int id)
         {
-            var post = _postService.GetById(id: id);
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var replies = BuildPostReplies(replies: post.Replies);
-
-            var model = new PostDetaileModel
+            if (id > 0)
             {
-                Id = post.Id,
-                Title = post.Title,
-                AuthorId = post.User.Id,
-                AuthorName = post.User.UserName,
-                Created = post.Created,
-                PostContent = post.Content,
-                Replies = replies,
-                CurrentLoggedInUserId = userId
-            };
+                var post = _postService.GetById(id: id);
 
-            return View(model);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var replies = BuildPostReplies(replies: post.Replies);
+
+                var model = new PostDetaileModel
+                {
+                    Id = post.Id,
+                    Title = post.Title,
+                    AuthorId = post.User.Id,
+                    AuthorName = post.User.UserName,
+                    Created = post.Created,
+                    PostContent = post.Content,
+                    Replies = replies,
+                    CurrentLoggedInUserId = userId
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         public IActionResult DisplayFormToCreatePost()
