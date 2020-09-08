@@ -32,7 +32,7 @@ namespace FreeForum.Controllers
         [HttpGet]
         public IActionResult PostDetaile(int id)
         {
-            if (id > 0)
+            if (_postService.IdExists(idToVerify: id))
             {
                 var post = _postService.GetById(id: id);
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -67,7 +67,7 @@ namespace FreeForum.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost(NewPostModel model)
         {
-            if (model.Title.Length > 30)
+            if (!String.IsNullOrEmpty(model.Title) && model.Title.Length > 30)
             {
                 ModelState.AddModelError("Title", "Too long title..");
             }
@@ -86,6 +86,8 @@ namespace FreeForum.Controllers
                 return View(model);
             }
         }
+
+        #region Private methods
 
         private Post BuildPost(NewPostModel model, User user)
         {
@@ -114,5 +116,7 @@ namespace FreeForum.Controllers
 
             return sortedByNewpostRepliesModels;
         }
+
+        #endregion
     }
 }

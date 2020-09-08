@@ -22,9 +22,10 @@ namespace FreeForum.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult DisplayFormToEditReply(int id)
+        [HttpGet]
+        public IActionResult EditReply(int id)
         {
-            if (id > 0)
+            if (_replyService.IdExists(idToVerify: id))
             {
                 var reply = _replyService.GetById(id: id);
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -48,43 +49,70 @@ namespace FreeForum.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEditedReply(ReplyEditModel model)
+        public async Task<IActionResult> EditReply(ReplyEditModel model)
         {
-            await _replyService.UpdateReply(id: model.ReplyId, editedContent: model.EditedContent);
+            if (ModelState.IsValid)
+            {
+                await _replyService.UpdateReply(id: model.ReplyId, editedContent: model.EditedContent);
 
-            return RedirectToAction("PostDetaile", "Post", new { id = Int32.Parse(model.PostId) });
+                return RedirectToAction("PostDetaile", "Post", new { id = Int32.Parse(model.PostId) });
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
-        public async Task<IActionResult> DisplayFormToCreateReply(int id)
+        [HttpGet]
+        public async Task<IActionResult> CreateReply(int id)
         {
-            var post = _postService.GetById(id: id);
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-            var model = new PostReplyModel
+            if (_postService.IdExists(idToVerify: id))
             {
-                AuthorId = user.Id,
-                AuthorName = User.Identity.Name,
+                var post = _postService.GetById(id: id);
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-                Created = DateTime.Now,
+                var model = new PostReplyModel
+                {
+                    AuthorId = user.Id,
+                    AuthorName = User.Identity.Name,
 
-                PostId = post.Id,
-                PostTitle = post.Title,
-                PostContent = post.Content 
-            };
+                    Created = DateTime.Now,
 
-            return View(model);
+                    PostId = post.Id,
+                    PostTitle = post.Title,
+                    PostContent = post.Content
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddReply(PostReplyModel model)
+        public async Task<IActionResult> CreateReply(PostReplyModel model)
         {
-            var user = _userManager.FindByIdAsync(model.AuthorId).Result;
-            var reply = BuildReply(model, user);
+            if (ModelState.IsValid)
+            {
+                var user = _userManager.FindByIdAsync(model.AuthorId).Result;
+                var reply = BuildReply(model, user);
 
-            await _replyService.AddReply(reply);
+                await _replyService.AddReply(reply);
 
-            return RedirectToAction("PostDetaile", "Post", new { id = model.PostId });
+                return RedirectToAction("PostDetaile", "Post", new { id = model.PostId });
+            }
+            else
+            {
+                var post = _postService.GetById(id: model.PostId);
+                model.PostTitle = post.Title;
+
+                return View(model);
+            }
         }
+
+        #region Private methods
 
         private PostReply BuildReply(PostReplyModel model, User user)
         {
@@ -101,5 +129,7 @@ namespace FreeForum.Controllers
                 Post = post
             };
         }
+
+        #endregion
     }
 }

@@ -7,6 +7,7 @@ namespace FreeForum.Data
     public interface IPost
     {
         Post GetById(int id);
+        public bool IdExists(int idToVerify);
         IEnumerable<Post> GetAll();
         IEnumerable<Post> GetAllByNew();
 

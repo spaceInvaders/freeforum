@@ -1,4 +1,6 @@
-﻿namespace FreeForum.ViewModels.Reply
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FreeForum.ViewModels.Reply
 {
     public class ReplyEditModel
     {
@@ -10,6 +12,7 @@
         public string PostTitle { get; set; }
         public string PostContent { get; set; }
 
+        [Required]
         public string EditedContent { get; set; }
     }
 }

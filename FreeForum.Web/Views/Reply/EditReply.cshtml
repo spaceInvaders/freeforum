@@ -12,12 +12,14 @@
     <h3>Edit Reply on '@Model.PostTitle'</h3>
     <p>@Model.PostContent</p>
     <p><mark>Old reply: @Model.ContentToEdit</mark></p>
-    <form asp-action="AddEditedReply" method="post">
+    <form asp-action="EditReply" method="post">
         <textarea asp-for="EditedContent" rows="6" class="form-control" placeholder="New reply"></textarea>
         <span asp-validation-for="EditedContent"></span>
         <br>
         <button type="submit" class="btn btn-warning">Edit Reply</button>
         <input asp-for="ReplyId" type="hidden" />
         <input asp-for="PostId" type="hidden" />
+        <input asp-for="ContentToEdit" type="hidden" />
+        <input asp-for="PostTitle" type="hidden" />
     </form>
 </div>

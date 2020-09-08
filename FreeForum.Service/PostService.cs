@@ -41,6 +41,11 @@ namespace FreeForum.Service
             return post;
         }
 
+        public bool IdExists(int idToVerify)
+        {
+            return _context.Posts.Any(post => post.Id == idToVerify);
+        }
+
         public async Task Add(Post post)
         {
             _context.Posts.Add(post);

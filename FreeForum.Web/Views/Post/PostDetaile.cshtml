@@ -12,7 +12,7 @@
     {
         <p id="">
             <a asp-controller="Reply"
-               asp-action="DisplayFormToCreateReply"
+               asp-action="CreateReply"
                asp-route-id="@Model.Id"
                class="btn btn-warning">
                 Reply on a post
@@ -47,7 +47,7 @@
                             {
                                 <p id="">
                                     <a asp-controller="Reply"
-                                       asp-action="DisplayFormToEditReply"
+                                       asp-action="EditReply"
                                        asp-route-id="@reply.Id"
                                        class="btn btn-warning">
                                         Edit

@@ -11,12 +11,12 @@
     </p>
     <h3>Reply on '@Model.PostTitle'</h3>
     <p>@Model.PostContent</p>
-    <form asp-action="AddReply" method="post">
+    <form asp-action="CreateReply" method="post">
         <textarea asp-for="ReplyContent" rows="6" class="form-control" placeholder="Your reply.."></textarea>
         <span asp-validation-for="ReplyContent"></span>
         <br>
         <button type="submit" class="btn btn-warning">Submit Reply</button>
-        <input asp-for="AuthorId" type="hidden" />
-        <input asp-for="PostId" type="hidden" />
+        <input asp-for="AuthorId" type="hidden"/>
+        <input asp-for="PostId" type="hidden"/>
     </form>
 </div>
