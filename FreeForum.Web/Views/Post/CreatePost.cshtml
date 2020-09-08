@@ -2,14 +2,16 @@
 
 <h1>New Post</h1>
 
-<form asp-action="AddPost" method="post" id="addPostForm">
+<form asp-action="CreatePost" method="post" id="addPostForm">
     <div class="form-group">
         <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
+        <input asp-for="Title" class="form-control"/>
+        <span asp-validation-for="Title"></span>
     </div>
     <div class="form-group">
         <label asp-for="Content"></label>
         <textarea asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content"></span>
     </div>
     <button type="submit" id="" class="btn btn-warning btn-submitPost">Submit Post</button>
 </form>

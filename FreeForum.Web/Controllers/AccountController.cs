@@ -14,29 +14,30 @@ namespace FreeForum.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
 
-
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
         }
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 User user = new User { Email = model.Email, UserName = model.Email };
-                // Add user
+
                 var result = await _userManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    // Generating a token for a user
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action(
                         "ConfirmEmail",
@@ -56,6 +57,7 @@ namespace FreeForum.Controllers
                     }
                 }
             }
+
             return View(model);
         }
 
@@ -68,11 +70,13 @@ namespace FreeForum.Controllers
                 return View("Error");
             }
             var user = await _userManager.FindByIdAsync(userId);
+
             if (user == null)
             {
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
+
             if (result.Succeeded)
                 return RedirectToAction("Index", "Home");
             else
@@ -92,9 +96,9 @@ namespace FreeForum.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(model.Email);
+
                 if (user != null)
                 {
-                    // check if email is confirmed
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError(string.Empty, "You have not confirmed your email");
@@ -103,6 +107,7 @@ namespace FreeForum.Controllers
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -119,7 +124,6 @@ namespace FreeForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
-            // delete authentication cookies
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

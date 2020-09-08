@@ -23,19 +23,19 @@ namespace FreeForum.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
         public IActionResult PostDetaile(int id)
         {
             if (id > 0)
             {
                 var post = _postService.GetById(id: id);
-
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
                 var replies = BuildPostReplies(replies: post.Replies);
 
                 var model = new PostDetaileModel
@@ -58,26 +58,33 @@ namespace FreeForum.Controllers
             }
         }
 
-        public IActionResult DisplayFormToCreatePost()
+        [HttpGet]
+        public IActionResult CreatePost()
         {
-            var model = new NewPostModel
-            {
-                AuthorName = User.Identity.Name
-            };
-
-            return View(model);
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPost(NewPostModel model)
+        public async Task<IActionResult> CreatePost(NewPostModel model)
         {
-            var userId = _userManager.GetUserId(User);
-            var user = _userManager.FindByIdAsync(userId).Result;
-            var post = BuildPost(model, user);
+            if (model.Title.Length > 30)
+            {
+                ModelState.AddModelError("Title", "Too long title..");
+            }
+            if (ModelState.IsValid)
+            {
+                var userId = _userManager.GetUserId(User);
+                var user = _userManager.FindByIdAsync(userId).Result;
+                var post = BuildPost(model, user);
 
-            await _postService.Add(post);
+                await _postService.Add(post);
 
-            return RedirectToAction("PostDetaile", "Post", new { post.Id });
+                return RedirectToAction("PostDetaile", "Post", new { post.Id });
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         private Post BuildPost(NewPostModel model, User user)

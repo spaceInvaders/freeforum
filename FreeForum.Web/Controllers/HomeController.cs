@@ -41,6 +41,7 @@ namespace FreeForum.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public IActionResult Contact()
         {
             return View();
