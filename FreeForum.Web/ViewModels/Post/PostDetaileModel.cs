@@ -13,6 +13,7 @@ namespace FreeForum.ViewModels.Post
         public DateTime Created { get; set; }
         public string PostContent { get; set; }
 
+        public int RepliesCount { get; set; }
         public IEnumerable<PostReplyModel> Replies { get; set; }
 
         public string CurrentLoggedInUserId { get; set; }

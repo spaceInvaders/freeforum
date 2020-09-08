@@ -47,6 +47,7 @@ namespace FreeForum.Controllers
                     Created = post.Created,
                     PostContent = post.Content,
                     Replies = replies,
+                    RepliesCount = post.Replies.Count(),
                     CurrentLoggedInUserId = userId
                 };
 

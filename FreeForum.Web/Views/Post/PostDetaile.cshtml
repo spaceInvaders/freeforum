@@ -1,72 +1,75 @@
 ﻿@model FreeForum.ViewModels.Post.PostDetaileModel
 
 <div class="container">
-    <h1 class="display-4">Welcome to '@Model.Title' discussion!</h1>
-    <div>
-        <p><mark>✏ @Model.PostContent</mark></p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <h1 class="display-4">@Model.Title</h1>
+            </div>
+            <div class="row">
+                <p><mark>@Model.PostContent</mark></p>
+            </div>
+            <div class="row d-flex justify-content-between">
+                <p class="font-weight-light"><small>😎 @Model.AuthorName ⌚ @Model.Created</small></p>
+                <p>@Model.RepliesCount 💬</p>
+            </div>
+        </div>
     </div>
-    <div>
-        <p class="font-weight-light">🤩 @Model.AuthorName ⌚ @Model.Created</p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Reply"
+                       asp-action="CreateReply"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-block btn-warning">
+                        Reply on a post
+                    </a>
+                }
+                else
+                {
+                    <a style="text-decoration: none;" asp-controller="Account" asp-action="Login" class="btn btn-warning">
+                        You can comment this post in case you are authenticated
+                    </a>
+                }
+            </div>
+        </div>
     </div>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <p id="">
-            <a asp-controller="Reply"
-               asp-action="CreateReply"
-               asp-route-id="@Model.Id"
-               class="btn btn-warning">
-                Reply on a post
-            </a>
-        </p>
-    }
-    else
-    {
-        <p>
-            <a style="text-decoration: none;" asp-controller="Account" asp-action="Login" class="btn btn-warning">
-                You can comment this post in case you are authenticated
-            </a>
-        </p>
-    }
+    <br>
     @if (Model.Replies.Any())
     {
         foreach (var reply in Model.Replies)
         {
-            <table class="table table-hover col-sm-12">
-                <tbody>
-                    <tr>
-                        <td class="col-sm-8">
-                            <div>
-                                @reply.ReplyContent
-                            </div>
-                        </td>
-                        <td class="col-sm-2">
-                            <p class="font-weight-light font-italic"><small>@reply.AuthorName @reply.Created</small></p>
-                        </td>
-                        <td class="col-sm-2">
-                            @if (User.Identity.IsAuthenticated && reply.AuthorId == Model.CurrentLoggedInUserId)
-                            {
-                                <p id="">
-                                    <a asp-controller="Reply"
-                                       asp-action="EditReply"
-                                       asp-route-id="@reply.Id"
-                                       class="btn btn-warning">
-                                        Edit
-                                    </a>
-                                </p>
-                            }
-                            else if(User.Identity.IsAuthenticated && reply.AuthorId != Model.CurrentLoggedInUserId)
-                            {
-                                <p id="">
-                                    <a 
-                                       class="btn btn-success">
-                                        Like
-                                    </a>
-                                </p>
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <span>@reply.ReplyContent</span>
+                    </div>
+                    <div class="row d-flex justify-content-between">
+                        <p class="font-weight-light"><small>🤩 @reply.AuthorName ⌚ @reply.Created</small></p>
+                        @if (User.Identity.IsAuthenticated && reply.AuthorId == Model.CurrentLoggedInUserId)
+                        {
+                            <p id="">
+                                <a asp-controller="Reply"
+                                   asp-action="EditReply"
+                                   asp-route-id="@reply.Id"
+                                   class="btn btn-sm btn-danger">
+                                    Edit
+                                </a>
+                            </p>
+                        }
+                        else if (User.Identity.IsAuthenticated && reply.AuthorId != Model.CurrentLoggedInUserId)
+                        {
+                            <p id="">
+                                <a class="btn btn-sm btn-warning">
+                                    Like
+                                </a>
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div><br>
         }
     }
     else
