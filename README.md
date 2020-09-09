@@ -23,7 +23,7 @@ MS Visual Studio 2019, MS SQL Server 2019.
 
 5. Finally **Run IIS Express** for FreeForum.Web project (F5)
 
-6. After Registration you have to confirm your your account via email **on the same device** you run  FreeForum.Web project
+6. After Registration you have to confirm your account via email **on the same device** you run  FreeForum.Web project
 
 ### DB diagram:
 
