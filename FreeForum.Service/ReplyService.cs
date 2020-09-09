@@ -27,7 +27,7 @@ namespace FreeForum.Service
         }
         public bool IdExists(int idToVerify)
         {
-            return _context.Posts.Any(post => post.Id == idToVerify);
+            return _context.PostReplies.Any(post => post.Id == idToVerify);
         }
 
         public async Task UpdateReply(int id, string editedContent)

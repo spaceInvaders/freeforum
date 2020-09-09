@@ -24,9 +24,8 @@
              <p>
                  <a style="text-decoration: none;"
                     asp-controller="Account"
-                    asp-action="Login"
-                    class="btn">
-                     ✏ To create a new post you have to be authenticated
+                    asp-action="Login">
+                     👁️‍🗨️ To create a new post you have to be authenticated
                  </a>
              </p>
          }
@@ -47,7 +46,7 @@
                         </a>
                     </div>
                     <div class="row">
-                        <span>@post.Content</span>
+                        @post.Content
                     </div>
                     <div class="row d-flex justify-content-between">
                         <p class="font-weight-light"><small>🤩 @post.UserName ⌚ @post.DateCreated</small></p>
