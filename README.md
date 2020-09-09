@@ -25,5 +25,4 @@ MS Visual Studio 2019, MS SQL Server 2019.
 
 ### DB diagram:
 
-![](C:\Users\Sviatoslav\source\repos\FreeForum\FreeForum.Web\wwwroot\Images\DB diagram.jpg)
-
+![](https://github.com/spaceInvaders/freeforum/blob/master/FreeForum.Web/wwwroot/Images/DB%20diagram.jpg)
