@@ -15,11 +15,12 @@ MS Visual Studio 2019, MS SQL Server 2019.
 
 4. Open **Package Manager Console** (Ctrl+Q > Package Manager Console)
    In it's setting **Default project** select **FreeForum.Data**
-   Type in console:
-
+   
+Type in console:
+   
    `PM> Add-Migration InitialCreate`
-   `PM> Update-Database`
-
+`PM> Update-Database`
+   
 5. Finally **Run IIS Express** for FreeForum.Web project (F5)
 
    
