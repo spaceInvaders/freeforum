@@ -1,6 +1,6 @@
 ### Requirements:
 
-MS Visual Studio 2019, MS SQL Server 2019.
+MS Visual Studio 2022, MS SQL Server 2019 or higher.
 
 ### Launch settings:
 
